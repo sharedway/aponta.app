@@ -1,0 +1,128 @@
+{% extends 'base/auth.html' %}
+{% load i18n static add_css semantic_icons%}
+
+{% block head_js_inline %}
+{{ block.super }}
+<script>
+  $(document)
+    .ready(function() {
+      $('.ui.form')
+        .form({
+          fields: {
+            email: {
+              identifier  : 'email',
+              rules: [
+                {
+                  type   : 'empty',
+                  prompt : 'Please enter your e-mail'
+                },
+                {
+                  type   : 'email',
+                  prompt : 'Please enter a valid e-mail'
+                }
+              ]
+            },
+            password: {
+              identifier  : 'password',
+              rules: [
+                {
+                  type   : 'empty',
+                  prompt : 'Please enter your password'
+                },
+                {
+                  type   : 'length[6]',
+                  prompt : 'Your password must be at least 6 characters'
+                }
+              ]
+            }
+          }
+        })
+      ;
+    })
+  ;
+  </script>
+{% endblock head_js_inline%}
+
+{% block auth_menu_itens %}
+<a href="{% url 'login' %}?next=/manager/" class="item" >{% translate 'Entrar' %}</a>  
+<a href="{% url 'account-create' %}?next=/manager/" class="item active" >{% translate 'Criar conta' %}</a>        
+<a href="{% url 'password_reset' %}?next=/manager/" class="item" >{% translate 'Recuperar senha' %}</a>
+{% endblock auth_menu_itens %}
+
+
+
+
+
+
+{% block core_body %}
+
+<div class="ui middle aligned center aligned grid">
+  <div class="column left aligned">
+    <div class="ui center aligned message">
+ 
+      <h2 class="ui center aligned header">
+       
+        <div class="content">
+          {% translate 'Criar conta' %}
+        </div>
+      </h2>
+            
+    </div>
+
+
+    <form class="ui large form" method="post" action="{% url 'login' %}?next={{next}}">
+        {% csrf_token %}
+
+      <div class="ui stacked segment">
+        {% for field in form %}
+        
+        <div class="field required">
+          <label>{{field.label}}</label>
+            <div class="ui  left icon input">
+             <i class="{{field.id_for_label|get_icon}} icon"></i>  
+              {{field}}                     
+            </div>
+      {% if field.help_text %}
+      <div class="ui message">
+        <div class="header">
+          Critérios para {{field.label}}
+        </div>
+        {{ field.help_text|safe }}
+      </div>
+
+            
+      {% endif %}
+
+          </div>
+        
+
+        {% endfor %}
+      
+        <div class="ui fluid large primary submit button"> {% translate 'Criar conta' %}</div>
+      </div>
+
+      <div class="ui error message">
+
+        {% if form.non_field_errors %}
+              
+        {% for error in form.non_field_errors %}
+            <div class="alert text-white " role="alert">
+                {{ error }}
+            </div>
+        {% endfor %}        
+        {% endif %}       
+
+
+      </div>
+
+    </form>
+
+
+  </div>
+  </div>
+
+
+{% endblock %}
+
+
+

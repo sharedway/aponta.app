@@ -1,0 +1,29 @@
+{% extends "base/core.html" %}
+{% load i18n static %}
+
+{% block bodyMainContent %}
+<container>
+<p>
+<h1>
+{% translate 'Dados da conta' %}
+</h1>
+</p>
+<p>
+    {{user.get_username }}
+    </p>
+</container>
+
+
+
+
+{% endblock %}
+
+
+{% block headJS %}
+
+{{block.super}}
+<script type="text/javascript">
+Toaster.postMessage("User Agent: " + navigator.userAgent);
+</script>
+
+{% endblock %}

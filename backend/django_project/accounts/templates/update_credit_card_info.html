@@ -1,0 +1,9 @@
+{% extends "app/base.html" %}
+{% load i18n static add_css %}
+{% block bodyEndJS %}
+{{block.super}}
+{% csrf_token %}
+   <script type="text/javascript">
+ CloseAppWindow.postMessage("Done");
+</script>
+   {% endblock %}

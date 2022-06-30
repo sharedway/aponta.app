@@ -1,0 +1,201 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-03-27 08:52-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: accounts/admin/user.py:29 accounts/admin/user.py:31
+msgid "Personal info"
+msgstr ""
+
+#: accounts/admin/user.py:29
+msgid "Permissions"
+msgstr ""
+
+#: accounts/admin/user.py:29
+msgid "Important dates"
+msgstr ""
+
+#: accounts/apps.py:5
+msgid "Operadores"
+msgstr ""
+
+#: accounts/models/user.py:26
+msgid "Foto do usuario"
+msgstr ""
+
+#: accounts/models/user.py:75
+msgid "Conta"
+msgstr ""
+
+#: accounts/models/user.py:76
+msgid "Contas"
+msgstr ""
+
+#: accounts/templates/account_signin.html:47
+#: accounts/templates/registration/login.html:28
+#: accounts/templates/registration/login.html:77
+#: accounts/templates/registration/password_reset_form.html:49
+msgid "Entrar"
+msgstr ""
+
+#: accounts/templates/account_signin.html:48
+#: accounts/templates/account_signin.html:66
+#: accounts/templates/account_signin.html:101
+msgid "Criar conta"
+msgstr ""
+
+#: accounts/templates/account_signin.html:49
+#: accounts/templates/registration/login.html:72
+#: accounts/templates/registration/password_reset_form.html:50
+#: accounts/templates/registration/password_reset_form.html:63
+#: accounts/templates/registration/password_reset_form.html:93
+msgid "Recuperar senha"
+msgstr ""
+
+#: accounts/templates/autorizar_pagseguro.html:7
+msgid ""
+"Forgotten your password? Enter your email address below, and we’ll email "
+"instructions for setting a new one."
+msgstr ""
+
+#: accounts/templates/autorizar_pagseguro.html:12
+msgid "Reset my password"
+msgstr ""
+
+#: accounts/templates/contact_form.html:20
+#: accounts/templates/contact_form_app.html:20
+msgid "Enviar mensagem"
+msgstr ""
+
+#: accounts/templates/pagseguro.html:16 accounts/templates/profile.html:8
+msgid "Dados da conta"
+msgstr ""
+
+#: accounts/templates/registration/logged_out.html:4
+#: accounts/templates/registration/password_change_done.html:6
+msgid "Home"
+msgstr ""
+
+#: accounts/templates/registration/logged_out.html:10
+msgid "Thanks for spending some quality time with the Web site today."
+msgstr ""
+
+#: accounts/templates/registration/logged_out.html:12
+msgid "Log in again"
+msgstr ""
+
+#: accounts/templates/registration/password_change_done.html:3
+msgid "Documentation"
+msgstr ""
+
+#: accounts/templates/registration/password_change_done.html:3
+msgid "Change password"
+msgstr ""
+
+#: accounts/templates/registration/password_change_done.html:3
+msgid "Log out"
+msgstr ""
+
+#: accounts/templates/registration/password_change_done.html:7
+msgid "Password change"
+msgstr ""
+
+#: accounts/templates/registration/password_change_done.html:12
+msgid "Your password was changed."
+msgstr ""
+
+#: accounts/templates/registration/password_reset_complete.html:15
+msgid "Your password has been set.  You may go ahead and log in now."
+msgstr ""
+
+#: accounts/templates/registration/password_reset_confirm.html:22
+msgid ""
+"Please enter your new password twice so we can verify you typed it in "
+"correctly."
+msgstr ""
+
+#: accounts/templates/registration/password_reset_confirm.html:29
+msgid "New password:"
+msgstr ""
+
+#: accounts/templates/registration/password_reset_confirm.html:34
+msgid "Confirm password:"
+msgstr ""
+
+#: accounts/templates/registration/password_reset_confirm.html:37
+msgid "Change my password"
+msgstr ""
+
+#: accounts/templates/registration/password_reset_confirm.html:43
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a new password reset."
+msgstr ""
+
+#: accounts/templates/registration/password_reset_done.html:16
+msgid ""
+"We’ve emailed you instructions for setting your password, if an account "
+"exists with the email you entered. You should receive them shortly."
+msgstr ""
+
+#: accounts/templates/registration/password_reset_done.html:18
+msgid ""
+"If you don’t receive an email, please make sure you’ve entered the address "
+"you registered with, and check your spam folder."
+msgstr ""
+
+#: accounts/templates/registration/password_reset_email.html:2
+#: accounts/templates/signin_email.html:2 accounts/templates/signin_email.txt:2
+#, python-format
+msgid ""
+"You're receiving this email because you requested a password reset for your "
+"user account at %(site_name)s."
+msgstr ""
+
+#: accounts/templates/registration/password_reset_email.html:4
+#: accounts/templates/signin_email.html:4 accounts/templates/signin_email.txt:4
+msgid "Please go to the following page and choose a new password:"
+msgstr ""
+
+#: accounts/templates/registration/password_reset_email.html:8
+#: accounts/templates/signin_email.html:11
+#: accounts/templates/signin_email.txt:10
+msgid "Your username, in case you’ve forgotten:"
+msgstr ""
+
+#: accounts/templates/registration/password_reset_email.html:10
+#: accounts/templates/signin_email.html:13
+#: accounts/templates/signin_email.txt:12
+msgid "Thanks for using our site!"
+msgstr ""
+
+#: accounts/templates/registration/password_reset_email.html:12
+#, python-format
+msgid "The %(site_name)s team"
+msgstr ""
+
+#: accounts/templates/signin_email.html:15
+#: accounts/templates/signin_email.txt:14
+#, python-format
+msgid "The %(site_name)s team "
+msgstr ""
+
+#: accounts/templates/signin_subject.txt:2
+#, python-format
+msgid "Conta criada%(site_name)s"
+msgstr ""

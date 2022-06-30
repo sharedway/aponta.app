@@ -1,0 +1,350 @@
+{% extends "app/base.html" %}
+{% load i18n static add_css %}
+{% block headExtraCSSLinks %}
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
+
+  <link rel="stylesheet" href="/static/stripe/css/normalize.css" />
+  <link rel="stylesheet" href="/static/stripe/css/global.css" />
+{% endblock %}
+
+
+{% block headInlineCSS %}
+
+{% endblock %}
+
+
+{% block headExtraJS %}
+   <script src="https://js.stripe.com/v3/"></script>
+{% endblock %}
+
+{% block bodyEndJS %}
+{{block.super}}
+{% csrf_token %}
+
+
+   <script type="text/javascript">
+
+
+
+
+var stripeElements = function(publicKey, setupIntent) {
+
+  var setup_intent= setupIntent;
+
+
+  var stripe = Stripe(publicKey,{locale: 'pt-BR'});
+
+  var elements = stripe.elements({
+    fonts: [
+      {
+        cssSrc: 'https://fonts.googleapis.com/css?family=Source+Code+Pro',
+      },
+    ]
+  });
+
+
+
+  var inputs = document.querySelectorAll('.input');
+
+
+  Array.prototype.forEach.call(inputs, function(input) {
+    input.addEventListener('focus', function() {
+      input.classList.add('focused');
+    });
+    input.addEventListener('blur', function() {
+      input.classList.remove('focused');
+    });
+    input.addEventListener('keyup', function() {
+      if (input.value.length === 0) {
+        input.classList.add('empty');
+      } else {
+        input.classList.remove('empty');
+      }
+    });
+  });
+
+
+
+
+
+  // Element styles
+  var style = {
+     base: {
+        iconColor: '#c4f0ff',
+        color: '#000',
+        fontWeight: 400,
+        fontFamily: 'Roboto, Open Sans, Segoe UI, sans-serif',
+        fontSize: '14px',
+        fontSmoothing: 'antialiased',
+
+        ':-webkit-autofill': {
+          color: '#fce883',
+        },
+        '::placeholder': {
+          color: '#87BBFD',
+        },
+      },
+      invalid: {
+        iconColor: '#FFC7EE',
+        color: '#FFC7EE',
+      },
+  };
+
+  var card = elements.create('card', {
+    iconStyle: 'solid',
+    style: {
+      base: {
+        iconColor: '#c4f0ff',
+        color: '#000',
+        fontWeight: 800,
+        fontFamily: 'Roboto, Open Sans, Segoe UI, sans-serif',
+        fontSize: '12px',
+        fontSmoothing: 'antialiased',
+        ':-webkit-autofill': {
+          color: '#fce883',
+        },
+        '::placeholder': {
+          color: '#87BBFD',
+        },
+      },
+      invalid: {
+        iconColor: '#FFC7EE',
+        color: '#FFC7EE',
+      },
+    },
+  });
+
+  card.mount("#card-element");
+
+var displayError = document.getElementById("card-errors");
+  card.on("focus", function() {
+    var el = document.getElementById("card-element");
+    el.classList.add("focused");
+  });
+
+  card.on("blur", function() {
+    var el = document.getElementById("card-element");
+    el.classList.remove("focused");
+  });
+
+card.on('change', function(event) {
+
+  if (event.complete) {
+  document.querySelector("#submit-button").classList.remove("hidden");
+  } else if (event.error) {
+    document.querySelector("#submit-button").classList.add("hidden");
+    // console.log(event.error.message);
+
+      displayError.textContent = event.error.message;
+
+    // show validation to customer
+  } else {
+    displayError.textContent="";
+  }
+});
+
+
+  // Handle payment submission when user clicks the pay button.
+  var button = document.getElementById("submit-button");
+
+
+  var save_name_button = document.getElementById("submit-name-button");
+
+
+ save_name_button.addEventListener("click", function(event) {
+  event.preventDefault();
+
+document.querySelector("#name-container").classList.add("hidden");
+document.querySelector("#card-container").classList.remove("hidden");
+
+
+ });
+
+
+
+  button.addEventListener("click", function(event) {
+
+
+    event.preventDefault();
+    changeLoadingState(true);
+
+    var inputEmail = document.getElementById("email").value;
+    var inputName = document.getElementById("name").value;
+    // var inputZipCode = document.getElementById("zipcode").value;
+    // var inputPhone = document.getElementById("phone").value;
+
+
+
+    stripe
+      .confirmCardSetup(setup_intent.client_secret, {
+        payment_method: {
+          card: card,
+          billing_details: {
+            email: inputEmail,
+            name: inputName
+            }
+        }
+      })
+      .then(function(result) {
+        if (result.error) {
+          changeLoadingState(false);
+          var displayError = document.getElementById("card-errors");
+          displayError.textContent = result.error.message;
+        } else {
+          // The PaymentMethod was successfully set up
+          orderComplete(stripe, setup_intent.client_secret);
+        }
+      });
+  });
+};
+
+var getSetupIntent = function(publicKey,setupIntent) {
+
+
+try {
+  var elementos = stripeElements(publicKey, setupIntent);
+  changeLoadingState(false);
+  return elementos;
+}
+catch(err) {
+  RedirecToUrl.postMessage("{% url 'stripe-update-cards' %}");
+}
+
+
+
+
+
+
+
+  // return fetch("{% url 'stripe-get-setup-intent' %}", {
+  //   method: "get",
+  //   headers: {
+  //     "Content-Type": "application/json"
+  //   }
+  // })
+  //   .then(function(response) {
+  //     return response.json();
+  //   })
+  //   .then(function(setupIntent) {
+  //       changeLoadingState(false);
+  //     stripeElements(publicKey, setupIntent);
+  //   });
+};
+
+
+
+var changeLoadingState = function(isLoading) {
+  if (isLoading) {
+    document.querySelector(".hidde-me").classList.add("hidden");
+    document.querySelector("button").disabled = true;
+    document.querySelector("button").classList.add("hidden");
+    document.querySelector("#spinner").classList.remove("hidden");
+
+  } else {
+
+    document.getElementById("name").focus();
+
+    document.querySelector("#name-container").classList.remove("hidden");
+    document.querySelector(".hidde-me").classList.remove("hidden");
+
+
+    document.querySelector("#spinner").classList.add("hidden");
+
+  }
+};
+
+/* Shows a success / error message when the payment is complete */
+var orderComplete = function(stripe, clientSecret) {
+
+  document.querySelector(".sr-payment-form").classList.add("hidden");
+
+  stripe.retrieveSetupIntent(clientSecret).then(function(result) {
+
+    var setupIntent = result.setupIntent;
+    var setupIntentJson = JSON.stringify(setupIntent, null, 2);
+
+   // CloseAppWindow.postMessage(setupIntentJson);
+   RedirecToUrl.postMessage("{% url 'stripe-update-cards' %}");
+
+
+
+
+    // changeLoadingState(false);
+  });
+};
+
+// changeLoadingState(false);
+getSetupIntent("{{publicKey}}",{{setup_intent|safe}});
+
+    </script>
+{% endblock %}
+
+
+{% block bodyMainContent %}
+
+
+  <div class="container-fluid mt-4">
+
+
+
+ <div class="spinner" id="spinner"></div>
+
+      <div class="container-fluid hidden sr-payment-form hidde-me" >
+
+
+        <form >
+
+        <input type="hidden" id="email" value="{{user.email}}" />
+
+  <div class="form-group container-fluid hidden" id="name-container">
+    <label for="name">Nome do titular</label>
+    <input type="text" value="{{user.fullName}}" autofocus class="form-control" id="name" aria-describedby="nameHelp" placeholder="Nome como consta no cartão">
+    <small id="nomeHelp" class="form-text text-muted">Preencha com o nome que consta no cartão de crédito.</small>
+        <button type="button" id="submit-name-button" class="btn btn-primary btn-lg btn-block">
+            Próximo
+    </button>
+
+  </div>
+
+
+  <div class="form-group container-fluid hidden" id="card-container">
+    <label for="name">Dados do cartão</label>
+    <div class="sr-input sr-element sr-card-element" id="card-element">
+              <!-- A Stripe card Element will be inserted here. -->
+            </div>
+
+     <button type="button" id="submit-button" class="btn btn-primary btn-lg btn-block">
+            Salvar
+    </button>
+
+  </div>
+
+     <div class="sr-field-error" id="card-errors" role="alert">
+
+
+          </div>
+
+
+
+        </form>
+
+       <div class="sr-result">
+
+          <pre>
+            <code></code>
+          </pre>
+        </div>
+
+
+
+
+
+
+
+
+</div>
+
+{% endblock %}
+

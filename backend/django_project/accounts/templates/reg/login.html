@@ -1,0 +1,123 @@
+{% extends 'base/auth.html' %}
+{% load i18n static add_css semantic_icons %}
+
+
+{% block head_css_inline %}
+<style>
+body {
+  background-image: url("{% static 'assets/images/bg_map.jpg' %}");
+  background-repeat: no-repeat;
+  background-size: cover;
+
+}
+</style>
+{% endblock head_css_inline %}
+
+
+
+
+{% block body_tag %}
+<body class="hold-transition login-page">
+{% endblock body_tag %}
+
+{% block core_body %}
+<div class="login-box">
+  <!-- /.login-logo -->
+  <div class="card card-outline card-primary">
+    <div class="card-header text-center">
+      <a href="/manager/" class="h1">{% translate 'Entrar' %}</a>
+    </div>
+    <div class="card-body">
+     
+
+
+
+        <form class="ui large form" method="post" action="{% url 'login' %}?next={{next}}">
+          {% csrf_token %}
+
+          {% for field in form %}
+        
+          <div class="input-group mb-3">
+            
+            {{field|add_attr:"form-control"}}
+     
+
+
+            <div class="input-group-append">
+              <div class="input-group-text">
+          
+                <span class="fas {{field.id_for_label|get_icon}} "></span>
+              </div>
+            </div>
+          </div>
+              
+        {% if field.help_text %}
+        <div class="ui message">
+          <div class="header">
+            Critérios para {{field.label}}
+          </div>
+          {{ field.help_text|safe }}
+        </div>
+  
+              
+        {% endif %}
+  
+          
+          {% endfor %}
+          
+        
+        <div class="row">
+          <div class="col-8">
+            <p class="mb-1">
+              <a href="{% url 'login' %}?&next={{next}}">{% translate 'Recuperar senha' %}</a>
+            </p>
+          </div>
+          <!-- /.col -->
+          <div class="col-4">
+            <button type="submit" class="btn btn-primary btn-block">{% translate 'Entrar' %}</button>
+          </div>
+          <!-- /.col -->
+        </div>
+      </form>
+
+      {% if form.subject.errors %}
+      <ol>
+      {% for error in form.subject.errors %}
+          <li><strong>{{ error|escape }}</strong></li>
+      {% endfor %}
+      </ol>
+  {% endif %}
+
+
+      {% if form.non_field_errors %}
+      <div class="card-header">
+        <h3 class="card-title">
+          <i class="fas fa-exclamation-triangle"></i>
+         Alertas
+        </h3>
+      </div>
+    
+      <div class="card-body">
+      {% for error in form.non_field_errors %}
+          <div class="alert alert-warning" role="alert">
+              {{ error }}
+          </div>
+      {% endfor %}   
+      
+      </div>
+      </div>
+      {% endif %} 
+
+
+      <!-- /.social-auth-links -->
+
+ 
+
+    </div>
+    <!-- /.card-body -->
+  </div>
+  <!-- /.card -->
+</div>
+<!-- /.login-box -->
+
+{% endblock %}

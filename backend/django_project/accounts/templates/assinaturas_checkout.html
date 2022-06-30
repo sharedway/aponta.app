@@ -1,0 +1,79 @@
+{% extends "app/base.html" %}
+{% load i18n static %}
+
+
+
+
+{% block headJS %}
+{{block.super}}
+<script type="text/javascript">
+
+function reloadState() {
+    if(typeof(reloadState) != "undefined"){
+    reloadState.postMessage("restart state");
+}
+}
+</script>
+
+{% endblock %}
+
+
+
+
+{% block bodyMainContent %}
+
+
+<main class="container">
+
+
+    <div class="card-group">
+  
+
+ 
+{% for preco in precos %} 
+<div class="card mb-3">
+    <div class="row g-0">
+        <div class="col-md-4">
+            <div id="carousel_{{plano.id}}" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">             
+                    {% for img in preco.product.app_subscription.imagens.all %}
+                    <div class="carousel-item active">
+                        <img src="{{img.imagem.url}}" class="d-block w-100 img-fluid rounded-start " alt="...">
+                    </div>
+                    {%endfor%}         
+                </div>            
+            </div>         
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">        
+                <h5 class="card-title">
+                {{preco.nickname}}           
+                </h5>
+                <p class="card-text"> 
+                {{preco.product.description}}
+                </p>
+                <p class="card-text text-center align-middle"> 
+                    R$ {{preco.unit_amount}}
+                    <br>
+                   
+                </p>
+                <button class="btn btn-primary position-relative d-block me-md-2 w-100" style="background-color: rgba(203, 153, 96, 1); color:white">                    
+                    <a href="/stripe/checkout/{{preco.stripe_id}}/{{user.stripe_id}}/" style="color:white"> Assinar </a>                   
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{%endfor%}
+
+
+</div>
+
+
+</main>
+
+
+
+{% endblock %}

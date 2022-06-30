@@ -1,0 +1,16 @@
+{% extends "base/core.html" %}
+{% load i18n static %}
+
+{% block bodyMainContent %}
+
+
+<p>{% translate 'Forgotten your password? Enter your email address below, and we’ll email instructions for setting a new one.' %}</p>
+
+<form method="post">
+    {% csrf_token %}
+{{ form }}
+<input type="submit" value="{% translate 'Reset my password' %}">
+</form>
+
+
+{% endblock %}
