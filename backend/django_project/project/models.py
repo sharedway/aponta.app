@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 import requests
 from django_pandas.managers import DataFrameManager
-
+from django.urls import reverse
 
 
 # Be careful with related_name and related_query_name. Why?
@@ -76,9 +76,24 @@ class BaseModel(models.Model):
     isPublic = models.BooleanField(default=False, null=True)
     isRemoved = models.BooleanField(default=False, null=True)
 
-    criado_por = models.ForeignKey(
-        settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL
-    )
+
+    def get_list_url(self):     
+        return reverse(f"{self._meta.model_name}-list")
+
+    def get_absolute_url(self):
+        return reverse(f"{self._meta.model_name}-detail", args=[str(self.id)])
+
+    def get_delete_url(self):
+        return reverse(f"{self._meta.model_name}-delete", args=[str(self.id)])
+
+    def get_detail_url(self):
+        return reverse(f"{self._meta.model_name}-detail", args=[str(self.id)])
+
+    def get_create_url(self):
+        return reverse(f"{self._meta.model_name}-create")
+
+    def get_update_url(self):
+        return reverse(f"{self._meta.model_name}-update", args=[str(self.id)])
 
     @classmethod
     def propriedades(cls):
@@ -91,16 +106,15 @@ class BaseModel(models.Model):
         except Exception:
             return None
 
-    def reverse_address_from_postal_code(self,postalcode):
+    def reverse_address_from_postal_code(self, postalcode):
         try:
             url = f"http://45.56.102.198:8181/search.php?postalcode={postalcode}&format=json"
-            return requests.get(url, timeout=20).json()        
+            return requests.get(url, timeout=20).json()
         except Exception as e:
             print(e.__repr__())
             return [{}]
 
-
-    class Meta:
+    class Meta:        
         abstract = True
         ordering = ["created"]
 

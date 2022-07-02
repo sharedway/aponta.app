@@ -8,9 +8,12 @@ from typing import Any, Dict
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 AUTH_USER_MODEL = "accounts.User"
-FIREBASE_CERTIFICATE = credentials.Certificate(f"{BASE_DIR}/project/service-account-file.json")
-FIREBASE_APP = firebase_admin.initialize_app(FIREBASE_CERTIFICATE)
+
+if os.path.exists(f"{BASE_DIR}/project/service-account-file.json"):
+    FIREBASE_CERTIFICATE = credentials.Certificate(f"{BASE_DIR}/project/service-account-file.json")
+    FIREBASE_APP = firebase_admin.initialize_app(FIREBASE_CERTIFICATE)
 
 redis_host = os.environ.get("REDIS_HOST", default="localhost")
 redis_port = os.environ.get("REDIS_PORT", default=6379)
@@ -26,12 +29,16 @@ SECRET_KEY = os.environ.get(
 
 DEBUG = int(os.environ.get("DEBUG", default=1))
 
+SITE_HEADER = "Site HEader"
+SITE_TITLE="Site title"
+SITE_INDEX_TITLE="Index Title"
+
 
 REST_API_ADDRESS=os.environ.get("REST_API_ADDRESS", default="http://192.168.1.12:9077")
 SOCKET_API_ADDRESS=os.environ.get("SOCKET_API_ADDRESS", default="ws://192.168.1.12:9077")
 
-NOTIFICATIONS_BASE_SITE ="https://dashboard.walkinline.com.br"
-
+NOTIFICATIONS_BASE_SITE =os.environ.get("NOTIFICATIONS_BASE_SITE", default="http://192.168.1.12:9077")
+API_BASE_URI=os.environ.get("API_BASE_URI", default="http://192.168.1.12:9077")
 
 TEST=False
 CELERY_BROKER_URL = f"redis://{redis_host}:{redis_port}/{redis_db}"
@@ -46,21 +53,19 @@ CELERY_RESULT_SERIALIZER = "json"
 CELERY_TASK_SERIALIZER = "json"
 TASK_OFFSET_LIMIT=50
 TIME_ZONE = "America/Sao_Paulo"
+
 SENDGRID_API_KEY = os.environ.get(
     "SENDGRID_API_KEY",
     default="_fake_key_",
 )
+
 EMAIL_HOST = "smtp.sendgrid.net"
 EMAIL_HOST_USER = "apikey"
 EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL="naoresponda@sharedway.app"
-
-
 DEFAULT_AUTO_FIELD="django.db.models.BigAutoField"
-API_BASE_URI="https://api-gateway.sharedway.app"
-
 
 REST_FRAMEWORK = {
     "DEFAULT_PARSER_CLASSES": [
@@ -86,7 +91,7 @@ REST_FRAMEWORK = {
 
 SITE_ID = 1
 ALLOWED_HOSTS = [
-    "127.0.0.1", "localhost", "192.168.1.15", "192.168.1.12", "dashboard.walkinline.com.br", "www.walkinline.com.br"    
+    "127.0.0.1", "localhost", "192.168.1.15", "192.168.1.12", "dashboard.aponta.app", "www.aponta.app"    
 ]+list(FQDNS.split(","))
 
 
@@ -97,26 +102,10 @@ SILENCED_SYSTEM_CHECKS = ['security.W019']
 
 INSTALLED_APPS = [
     "jazzmin",
-    "project_tools.apps.ProjectToolsConfig",
-    "restfiles.apps.RestfilesConfig",
     "accounts.apps.AccountsConfig",
-    "contatos.apps.ContatosConfig",    
     "project.apps.ProjectConfig",
-    "provisionadores.apps.ProvisionadoresConfig",
-    "aplicativos.apps.AplicativosConfig",
-    "datavault.apps.DatavaultConfig",
-    "organizacoes.apps.OrganizacoesConfig",
-    "entidades.apps.EntidadesConfig",
-    "equipamentos.apps.EquipamentosConfig",
-    "chips.apps.ChipsConfig",
-    "veiculos.apps.VeiculosConfig",
-    "central.apps.CentralConfig",
-    "relatorios.apps.RelatoriosConfig",
-    "atendimentos.apps.AtendimentosConfig",
-    "ocorrencias.apps.OcorrenciasConfig",
-    "tecnico.apps.TecnicoConfig",
-    "notifications.apps.NotificationsConfig",
-    "analytics.apps.AnalyticsConfig",
+    "project_tools.apps.ProjectToolsConfig",
+    "alertas.apps.AlertasConfig",
     "rest_framework",
     "corsheaders",
     "rest_framework.authtoken",
@@ -155,10 +144,11 @@ MIDDLEWARE = [
 ]
 CSRF_USE_SESSIONS=True
 CORS_ALLOWED_ORIGINS = [   
-    'http://localhost:9077',
+    'http://localhost:9075',
     'http://localhost:8001',
-    'http://192.168.1.12:9077',    
-    'https://dashboard.walkinline.com.br'
+    'http://192.168.1.12:9075',
+    'http://www.aponta.app',
+    'https://www.aponta.app'
 ]
 CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
 

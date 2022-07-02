@@ -1,0 +1,2 @@
+
+from .alerta import AlertaModelTemplateView, AlertaModelViewSet, AlertaModelDetailView, AlertaModelListView, AlertaModelUpdateView, AlertaModelCreateView, AlertaModelDeleteView

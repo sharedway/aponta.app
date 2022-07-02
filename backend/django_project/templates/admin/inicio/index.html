@@ -1,0 +1,339 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static jazzmin %}
+{% get_jazzmin_ui_tweaks as jazzmin_ui %}
+
+
+
+        
+
+
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+{% block content_title %} {% endblock %}
+
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb float-sm-right">
+        <li class="breadcrumb-item"><a href="{% url 'admin:index' %}"><i class="fa fa-tachometer-alt"></i> {% trans 'Home' %}</a></li>        
+        <li class="breadcrumb-item">{% trans 'Dashboard' %}</li>
+
+        
+
+    </ol>
+{% endblock %}
+
+
+
+
+{% block content %} 
+
+
+{% block body_content %} 
+
+<div class="alert " role="alert">
+
+<div class="col-12">
+
+
+
+
+
+
+           <div class="widget-user-header text-center"
+            >
+
+            <h2 class="widget-user-username text-bold text-info"> {{ "Status de Transmissões"|upper }}</h2>           
+          </div>
+</div>
+
+<div class="col-12">
+
+
+<div class="row row-cols-5  g-4">
+
+
+<div class="col">
+  {% include 'admin/includes/card_total_trans.html' with totais=total_transmissoes_ultima_hora card_periodo="ultima_hora" card_title="Ultima hora" %}
+</div>
+
+
+           <div class="col">
+                {% include 'admin/includes/card_total_trans.html' with totais=total_transmissoes_entre_1_e_6 card_periodo="entre_1_e_6" card_title="Entre 1h e 6h" %}
+               
+              </div>
+
+  
+             <div class="col">
+                {% include 'admin/includes/card_total_trans.html' with totais=total_transmissoes_entre_6_e_24  card_periodo="entre_6_e_24" card_title="Entre 6h e 24h" %}
+              </div>
+
+
+
+              <div class="col">
+                {% include 'admin/includes/card_total_trans.html' with totais=total_transmissoes_entre_24_e_48  card_periodo="entre_24_e_48" card_title="Entre 24h e 48h" %}               
+              </div>
+
+              <div class="col">
+                
+                {% include 'admin/includes/card_total_trans.html' with totais=total_transmissoes_acima_de_48 card_periodo="acima_de_48" card_title="Acima de 48h" %} 
+
+              </div>
+
+
+</div>
+
+
+</div>
+</div>
+
+
+
+
+<div class="col-12 p-4">
+{% include 'admin/includes/totais_cadastrados.html' %}
+</div>
+
+
+
+<div class="col-12">
+  <div class="container-fluid">
+    <h3 class="text-info">
+      Selecione a organização
+  </h3>  
+    <form class="d-flex " method="GET">
+      {% include 'admin/includes/organizacoes_select_options.html' %}
+      <button type="submit" class="btn btn-primary ml-4">Filtrar</button>
+    </form>
+  </div>
+</div>
+
+
+
+
+<div class="col-12 m-4"></div>
+
+
+
+<div class="col-12 p-4">
+
+
+<div class="row ">
+
+
+<div class="col-6">
+{% include 'admin/inicio/resumo_entidades.html' %}
+</div>
+
+<div class="col-6">
+{% include 'admin/inicio/resumo_veiculos.html' %}
+</div>
+<div class="col-6">
+{% include 'admin/inicio/resumo_equipamentos.html' %}
+</div>
+
+<div class="col-6">
+{% include 'admin/inicio/resumo_chips.html' %}
+</div>
+
+
+</div>
+</div>
+
+
+{% endblock body_content %}
+{% endblock content %}   
+
+
+
+{% block extrajs %}
+{{ block.super }}
+
+<script  type="text/javascript">
+
+
+
+async function renderPieChart(seriesInput,labelsInput,colorsInput,tag_id) {
+  
+ 
+  var chart = new ApexCharts(document.querySelector(tag_id), {
+       
+        labels: labelsInput,  
+        series: seriesInput,
+        chart: {
+        height: '350px',                            
+        type: 'pie',
+        },
+      legend: {
+      labels: {
+        textAnchor: 'left',
+      
+      useSeriesColors: true
+      },
+      position: "left"
+            },
+        plotOptions: {
+          pie: {
+
+ 
+             
+    startAngle: -90,
+    endAngle: 270,
+    dataLabels: {
+    minAngleToShowLabel: 5,
+    offset: -20,
+    style: {
+    fontSize: '14px',
+    fontFamily: 'Helvetica, Arial, sans-serif',
+    fontWeight: 'bold',
+     
+  },
+        textAnchor: 'middle',
+        distributed: true,
+        enabled: true
+        },
+
+          }
+        },
+    dataLabels: {
+    minAngleToShowLabel: 1,
+    offset: 70,
+    style: {
+  fontSize: '18px',
+    fontFamily: 'Helvetica, Arial, sans-serif',
+  },
+        textAnchor: 'bottom',
+        distributed: true,
+        enabled:true
+        },
+       
+        });
+           
+chart.render();
+
+}
+
+
+
+
+async function renderChart(percentual,tag_id) {
+
+  var chart = new ApexCharts(document.querySelector(tag_id), {
+              series: [ percentual ],
+              chart: {
+              width:"100%",
+              type: 'radialBar',
+              toolbar: {
+                show: false,
+                offsetY: -10
+              }
+            },
+            plotOptions: {
+              radialBar: {
+                startAngle: -135,
+                endAngle: 135,
+                 hollow: {
+                  margin: 0,
+                  size: '40%',
+                  background: '#fff',
+                  image: undefined,
+                  imageOffsetX: 0,
+                  imageOffsetY: 0,
+                  position: 'front',
+                  dropShadow: {
+                    enabled: true,
+                    top: 3,
+                    left: 0,
+                    blur: 4,
+                    opacity: 0.24
+                  }
+                },
+                track: {
+                  background: '#fff',
+                  strokeWidth: '57%',
+                  margin: 0, // margin is in pixels
+                  dropShadow: {
+                    enabled: true,
+                    top: -3,
+                    left: 0,
+                    blur: 4,
+                    opacity: 0.35
+                  }
+                },
+            
+                dataLabels: {
+                  show: true,
+                  name: {                   
+                    show: false,
+                    color: '#888',
+                    fontSize: '12px'
+                  },
+                  value: {
+                    formatter: function(val) {
+                      return parseInt(val)+"%";
+                    },
+                    offsetY: 10,
+                    color: '#111',
+                    fontSize: '26px',
+                    fontWeight: 'bold',
+                    show: true,                
+                  }
+                }
+              }
+            },
+            fill: {
+          type: 'gradient',
+          gradient: {
+              shade: 'dark',
+              shadeIntensity: 0.15,
+              inverseColors: false,
+              opacityFrom: 1,
+              opacityTo: 1,
+              stops: [0, 50, 65, 91]
+          },
+        },
+            stroke: {
+          dashArray: 2
+        },
+            labels: ['Percentual'],
+            });
+           
+            chart.render();
+
+}
+
+
+  $(document).ready(function() {
+
+
+     renderPieChart([20,10,35,0.5,30],["Ativos","Inativos","Com EQPT","Sem EQPT","Financeiro Norm."],['#43BCCD', '#4caf50'],"#cart_resumo_veiculos")
+
+
+
+        renderPieChart([30,70],["Ativas","Desativadas"],['#43BCCD', '#4caf50'],"#cart_resumo_entidades")
+
+  renderPieChart([10,20,30,40,60],["Ativas","Desativadas","Defeitos","Cancelados","Sem EQPT"],['#43BCCD', '#4caf50','#4caf60','#4caf80','#4caf90'],"#cart_resumo_chips")
+
+
+ renderPieChart([30,20,20,10,10,10],["Ativos","Inativos","Com Chip","Sem Chip","Vinculado","Desvinculado"],['#43BCCD', '#4caf50','#4caf50','#4caf50','#4caf50','#4caf50'],"#cart_resumo_equipamentos")
+  
+
+
+          var acima_de_48 = "{% widthratio total_transmissoes_acima_de_48.total total_transmissoes_acima_de_48.de  100 %}";
+          renderChart(acima_de_48,"#chart-pie-transmissoes-acima_de_48");
+          var ultima_hora = "{% widthratio total_transmissoes_ultima_hora.total total_transmissoes_ultima_hora.de  100 %}";
+          renderChart(ultima_hora,"#chart-pie-transmissoes-ultima_hora");
+          var entre_1_e_6 = "{% widthratio total_transmissoes_entre_1_e_6.total total_transmissoes_entre_1_e_6.de  100 %}";
+          renderChart(entre_1_e_6,"#chart-pie-transmissoes-entre_1_e_6");
+          var entre_6_e_24 = "{% widthratio total_transmissoes_entre_6_e_24.total total_transmissoes_entre_6_e_24.de  100 %}";
+          renderChart(entre_6_e_24,"#chart-pie-transmissoes-entre_6_e_24");
+          var entre_24_e_48 = "{% widthratio total_transmissoes_entre_24_e_48.total total_transmissoes_entre_24_e_48.de  100 %}";
+          renderChart(entre_24_e_48,"#chart-pie-transmissoes-entre_24_e_48");
+            });
+        </script>
+
+        {% endblock extrajs %}
+
+
+
+
+
+

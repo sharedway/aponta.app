@@ -5,6 +5,7 @@ from django.core.asgi import get_asgi_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
 django_asgi_app = get_asgi_application()
+
 from channels.routing import ProtocolTypeRouter, URLRouter
 from django.db import close_old_connections
 from django.contrib.auth import authenticate
@@ -21,9 +22,6 @@ import  urllib.parse
 from channels.auth import AuthMiddlewareStack
 
 from django.urls import path, include, re_path
-from equipamentos import channels_urls as equipamentos_router
-from veiculos import channels_urls as veiculos_router
-from contatos import channels_urls as contatos_router
 
 isToken = re.compile(r"""(?<=Token )(.*)""", re.IGNORECASE)
 isBasic = re.compile(r"""(?<=Basic )(.*)""", re.IGNORECASE)
@@ -58,7 +56,6 @@ class TokenAuthMiddleware:
     async def __call__(self, scope, receive, send):
         user = None
         
-    
         headers = dict(scope["headers"])
         query_string = dict(urllib.parse.parse_qsl(scope.get("query_string","").decode()))
 
@@ -69,8 +66,6 @@ class TokenAuthMiddleware:
 
 
 #TODO: mudar abordagem utilizando o context manager
-
-
         if user is None:
             if b"authorization" in headers:
                 if isToken.search(headers[b"authorization"].decode()):
@@ -107,7 +102,7 @@ application = ProtocolTypeRouter(
     {
         "websocket": TokenAuthMiddleware(
             AuthMiddlewareStack(URLRouter(
-                list(equipamentos_router.websocket_urlpatterns)+list(contatos_router.websocket_urlpatterns)+list(veiculos_router.websocket_urlpatterns))  
+                )  
                 )
         )
     }

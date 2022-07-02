@@ -7,7 +7,7 @@ export DATABASE_ENGINE=django.contrib.gis.db.backends.postgis
 
 
 
-echo '${GOOGLE_SERVICE_ACCOUNT}' > project/service-account-file.json
+# echo '${GOOGLE_SERVICE_ACCOUNT}' > project/service-account-file.json
 
 
 python3 -m venv .venv 

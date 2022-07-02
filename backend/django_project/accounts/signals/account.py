@@ -53,10 +53,5 @@ def PostSaveUserModelSignals(
         for task in User.TASKS.get('on_save',[]):
             app.send_task(task, [instance.id])
 
-    print("save user")
-    print(instance.__dict__)
-
-    if instance.chatroom.count() <1:        
-        instance.chatroom.create()
 
 

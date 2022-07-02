@@ -1,0 +1,231 @@
+{% extends "admin/admin_dashboard/base_site.html" %}
+{% load i18n admin_urls project_tags static admin_modify jazzmin %}
+{% get_jazzmin_settings request as jazzmin_settings %}
+
+
+
+{% block title %}
+{{original.owner}}
+{% endblock %}
+
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'vendor/select2/css/select2.min.css' %}">
+
+    <style>
+    .direct-chat {
+        height: calc(100vh - 200px);
+    }
+    </style>
+{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
+    {{ media }}
+{% endblock %}
+
+{% block coltype %}colM{% endblock %}
+
+{% block bodyclass %}
+{{ block.super }} 
+app-{{ opts.app_label }} model-{{ opts.model_name }} change-form
+{% endblock %}
+
+{% if not is_popup %}
+    {% block breadcrumbs %}
+        <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{% url 'admin:index' %}"><i class="fa fa-tachometer-alt"></i> {% trans 'Home' %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a></li>
+            <li class="breadcrumb-item">
+                {% if has_view_permission %}
+                    <a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+                {% else %}
+                    {{ opts.verbose_name_plural|capfirst }}
+                {% endif %}
+            </li>
+            <li class="breadcrumb-item active">
+                {% if add %}
+                    {% blocktrans with name=opts.verbose_name %}Add {{ name }}{% endblocktrans %}
+                {% else %}
+                    {{ original|truncatewords:"18" }}
+                {% endif %}
+            </li>
+        </ol>
+    {% endblock %}
+{% endif %}
+
+{% block content_title %}{% endblock %}
+
+
+{% block content %}
+
+<div id="content-main" class="col-10 h-100">
+
+
+
+<div class="card card-primary direct-chat direct-chat-primary">
+ <div class="ribbon-wrapper" id="ribbon_id">
+    {% if original.owner.owner_connected %}
+        <div class="ribbon bg-success">Online</div>
+    {% else %}
+<div class="ribbon bg-warning">Offline</div>
+    {% endif %}
+    
+    
+  </div>
+  <div class="card-header">
+    <h3 class="card-title">Conversando com: {{original.owner}}</h3>
+  </div>
+
+  <div class="card-body" id="corpo_das_mensagens_{{original.id}}">
+    <!-- Conversations are loaded here -->
+
+
+{% for msg in original.mensagens.all %}
+
+<div class="direct-chat-msg m-2 {{msg.send_from_id|is_right_msg:original.owner.id}}">
+<div class="direct-chat-infos clearfix"><span class="direct-chat-name float-left">
+{{msg.send_from_name}}</span>
+<span class="direct-chat-timestamp float-right">{{msg.created}}</span></div>
+<img class="direct-chat-img" src="/static/icons/carro-verde.png" alt="message user image">
+<div class="direct-chat-text">{{msg}}</div>
+</div>
+
+{% endfor %}
+
+
+
+  </div>
+  <!-- /.card-body -->
+  <div class="card-footer">
+      <div class="input-group">
+        <input type="text" id="input_message" name="message" placeholder="digite a mensagem... " class="form-control">
+        <span class="input-group-append">
+          <button id="send_chat_message" type="button" class="btn btn-primary">Enviar</button>
+        </span>
+      </div>
+  </div>
+  <!-- /.card-footer-->
+</div>
+
+</div>
+<div id="content-chat-menu" class="col-2">
+
+
+</div>
+
+{% endblock %}
+
+{% block extrajs %}
+    {{  block.super }}
+    <script type="text/javascript" src="{% static 'vendor/select2/js/select2.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jazzmin/js/change_form.js' %}"></script>
+    {% if jazzmin_settings.related_modal_active %}
+    <script type="text/javascript" src="{% static 'jazzmin/plugins/bootstrap-show-modal/bootstrap-show-modal.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'jazzmin/js/related-modal.js' %}"></script>
+    {% endif %}
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+        moment.locale("pt-br");   
+        var chatroomid = JSON.parse("{{original.id}}");
+        var dono = JSON.parse("{{original.owner.id}}");
+        var nome_do_user = "{{request.user.fullName}}";
+
+        webSocket = new WebSocket('{{socket_api_address}}/channels/chatroom/{{original.id}}/?sso={{request.user.authToken}}');
+
+    $('#send_chat_message').click(function () {
+
+    var query_string = $("#input_message").val();   
+    webSocket.send(query_string);
+    $("#input_message").val('');
+    });
+
+
+ $( "#input_message" ).keypress(function( event ) {
+  if ( event.which == 13 ) {
+     event.preventDefault();
+var query_string = $("#input_message").val();   
+if(query_string.length >0){
+webSocket.send(query_string);
+    $("#input_message").val('');    
+    }
+   
+  } 
+
+
+});
+
+
+
+
+        webSocket.onerror = function(event) {
+            onError(event)
+        };
+
+        webSocket.onopen = function(event) {         
+            onOpen(event)
+        };
+
+        webSocket.onmessage = function(event) {
+            onMessage(event)
+        };
+
+        function onMessage(event) {
+
+            var msg = JSON.parse(event.data);
+            var classe_header = "left";
+
+
+
+            if(dono === msg.send_from_id){
+                classe_header = "right";
+            } 
+
+            var data = moment(msg.created).format('LLL');
+            
+            const htmlContent = `<div class="direct-chat-msg m-2 ${classe_header}">
+<div class="direct-chat-infos clearfix"><span class="direct-chat-name float-left">
+${msg.send_from_name}</span>
+<span class="direct-chat-timestamp float-right">${data}</span></div>
+<img class="direct-chat-img" src="/static/icons/carro-verde.png" alt="message user image">
+<div class="direct-chat-text">${msg.msg}</div>
+</div>
+`
+
+            if(typeof msg.msg !== "undefined"){
+            
+            $("#corpo_das_mensagens_{{original.id}}").append(htmlContent);
+            $("#corpo_das_mensagens_{{original.id}}").scrollTop($("#corpo_das_mensagens_{{original.id}}")[0].scrollHeight);
+
+            } else {
+
+               if(msg.owner_connected){                
+                    $("#ribbon_id").html('<div class="ribbon bg-success">Online</div>');
+                } else {
+                    $("#ribbon_id").html('<div class="ribbon bg-warning">Offline</div>');
+                }
+
+             
+
+            } 
+        
+        }
+        function onOpen(event) {
+            webSocket.send(nome_do_user+" Entrou no chat");           
+        }
+
+        function onError(event) {
+           console.log("erro");
+        }
+
+$("#corpo_das_mensagens_{{original.id}}").scrollTop($("#corpo_das_mensagens_{{original.id}}")[0].scrollHeight);
+});
+
+</script>
+
+{% endblock %}

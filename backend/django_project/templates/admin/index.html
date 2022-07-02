@@ -1,0 +1,16 @@
+{% if app_list|length > 1 %}
+        
+{% include "admin/inicio/index.html" %}
+
+{% else %}
+
+
+
+
+{% for app in app_list %}
+{% include "admin/index_app.html" with aplicativo=app  %}
+{% endfor %}
+
+
+
+{% endif %}

@@ -1,0 +1,9 @@
+{% load i18n static  project_tags %}
+<select id="organizacao_id" name="organizacao_id" class="select2bs4 fluid form-control">
+    <option value="">Todas</option>
+    {% with organizacao_ativa=qs.organizacao_id|safe %}
+    {% for organizacao in organizacoes %} 
+    <option  {{organizacao_ativa|active_class:organizacao.id}}   value="{{organizacao.id}}">{{organizacao.label}}</option>
+    {% endfor %}  
+    {% endwith %}
+  </select>      

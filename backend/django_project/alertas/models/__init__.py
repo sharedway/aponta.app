@@ -1,0 +1,3 @@
+
+
+from .alerta import AlertaModel

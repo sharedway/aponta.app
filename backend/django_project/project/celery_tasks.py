@@ -13,7 +13,7 @@ redis_db = os.environ.get("REDIS_DB", default=0)
 
 app = Celery(
     "project",
-    broker_url= f"redis://{redis_host}:{redis_port}/{redis_db}",
+    broker_url=f"redis://{redis_host}:{redis_port}/{redis_db}",
 )
 app.config_from_object("django.conf:settings", namespace="CELERY")
 app.conf.update(result_expires=3600, enable_utc=True, timezone="America/Sao_Paulo")
@@ -29,15 +29,11 @@ app.conf.update(result_expires=3600, enable_utc=True, timezone="America/Sao_Paul
 
 app.autodiscover_tasks()
 
+
 @app.on_after_configure.connect
-def setup_periodic_tasks(sender, **kwargs): 
+def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(
-        crontab(minute='*/10'),
-        processa_posicoes.s(0),
-    )
-    app.send_task("processa_posicoes",[0])    
-    sender.add_periodic_task(
-        crontab(minute='*/1'),
+        crontab(minute="*/1"),
         send_notifications.s(),
     )
     app.send_task("send_notifications")
@@ -46,9 +42,3 @@ def setup_periodic_tasks(sender, **kwargs):
 @app.task
 def send_notifications():
     app.send_task("send_notifications")
-
-
-
-@app.task
-def processa_posicoes(offset):
-    app.send_task("processa_posicoes",[offset])

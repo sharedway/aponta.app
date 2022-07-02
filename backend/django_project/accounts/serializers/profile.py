@@ -9,8 +9,7 @@ from django.contrib.auth import get_user_model
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = [
-            "chatroomid",
+        fields = [         
             "username",
             "email",
             "token",

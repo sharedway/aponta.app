@@ -1,0 +1,152 @@
+{% load i18n static  %}
+<div class="row">
+    <div class="col-md-12">
+        <!-- Widget: user widget style 1 -->
+        <div >
+        
+            <div class="row">
+          
+                <div class="col-lg-3 col-6">
+                    <!-- small box -->  
+
+
+                 
+                    <div class="small-box bg-info">
+                      
+                        <div class="inner">
+                        <p>Entidades cadastradas</p>
+                        <h3>{{total_entidades}}</h3>
+                      </div>
+                      
+                      <div class="icon">
+                        <i class="fas pl-2 fa-users"></i>
+                      </div> 
+              
+                      <div class="small-box-footer">
+                        <nav class="navbar navbar-expand">
+                            <ul class="navbar-nav ml-auto">                   
+                              <li class="nav-item">
+
+                            
+                                <a href="{% url "admin:entidades_entidademodel_changelist" %}" class="btn btn-xs  bg-white">                          
+                                  Entidades
+                                  <i class="fas pl-2 fa-users"></i>
+                                </a>
+                              </li>    
+                            </ul>
+                        </nav>
+                      </div>
+                    
+                    </div>
+                
+                  </div>
+
+       <!-- ./col -->
+       <div class="col-lg-3 col-6">
+        <!-- small box -->
+        <div class="small-box bg-orange text-white">
+          <div class="inner">
+            <p class="text-white" >Veiculos cadastrados</p>
+            <h3 class="text-white">{{total_veiculos}}</h3>
+  
+        </div>
+          <div class="icon">
+           
+            <i class="fas fa-car"></i>
+          </div>
+          <div class="small-box-footer">
+            <nav class="navbar navbar-expand">
+                <ul class="navbar-nav ml-auto">
+               
+                  <li class="nav-item">
+                    <a href="{% url "admin:veiculos_veiculomodel_changelist" %}"  class="btn btn-xs  bg-white">                          
+                      Veiculos
+  
+                      <i class="fas pl-2 fa-car"></i>
+                    </a>
+                  </li>    
+                </ul>
+            </nav>
+          </div>
+  
+        </div>
+  
+      </div>
+      <!-- ./col -->
+  
+      <div class="col-lg-3 col-6">
+        <!-- small box -->
+        <div class="small-box bg-success">
+          <div class="inner">
+            <p>Equipamentos cadastrados</p>
+            <h3>{{total_equipamentos}}</h3>
+           
+        </div>
+          <div class="icon">
+           
+            <i class="fas fa-satellite"></i>
+          </div>
+  
+          <div class="small-box-footer">
+            <nav class="navbar navbar-expand">
+                <ul class="navbar-nav ml-auto">
+               
+                  <li class="nav-item">
+                    <a href="{% url "admin:equipamentos_equipamento_changelist" %}"  class="btn btn-xs  bg-white" >                          
+                      Equipamentos
+  
+                      <i class="fas pl-2 fa-satellite"></i>
+                    </a>
+                  </li>    
+                </ul>
+            </nav>
+          </div>
+         
+        </div>
+      </div>
+  
+  
+      <!-- ./col -->
+      <div class="col-lg-3 col-6">
+        <!-- small box -->
+        <div class="small-box bg-danger">
+          <div class="inner">
+            
+            <p>Chips cadastrados</p>
+            <h3>{{total_chips}}</h3>
+          </div>
+          <div class="icon">
+            <i class="fas pl-2 fa-sim-card"></i>
+          </div>
+  
+          <div class="small-box-footer">
+            <nav class="navbar navbar-expand">
+                <ul class="navbar-nav ml-auto">                   
+                  <li class="nav-item">
+                    <a href="{% url "admin:chips_chip_changelist" %}"  class="btn btn-xs  bg-white">                          
+                      Chips
+                      <i class="fas pl-2 fa-sim-card"></i>
+                    </a>
+                  </li>    
+                </ul>
+            </nav>
+          </div>
+  
+        </div>
+      </div>
+
+
+
+   
+    
+             
+              <!-- /.col -->
+            </div>
+
+
+
+       
+        </div>
+        <!-- /.widget-user -->
+      </div>    
+    </div>
